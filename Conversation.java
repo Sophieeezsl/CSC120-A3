@@ -7,7 +7,7 @@ class Conversation implements Chatbot{
 
 // Attributes: there needs a transcript and some canned responses
 private ArrayList<String> transcript;
-private static String[] CannedResponses = {
+private static String[] canned_responses = {
     "Interesting, tell me more.", 
     "Mmm-hm.",
     "Can you elaborate?",
@@ -37,12 +37,11 @@ private static String[] CannedResponses = {
 
     while (counter < roundNum) {
 
-        
         String input = scanner.nextLine(); 
         String response = respond(input);
 
-        transcript.add(input);
-        transcript.add(response);
+        transcript.add("user:" + input);
+        transcript.add("chatbox:" + response);
 
         System.out.println(response);
         counter++; 
@@ -63,39 +62,39 @@ private static String[] CannedResponses = {
         }
     }
 
+
   /**
    * Gives appropriate response (mirrored or canned) to user input
    * @param inputString the users last line of input
    * @return mirrored or canned response to user input  
    */
 
-  public String respond(String inputString) { // respond using canned responses, and change me to you
-// Mirror words mapping
-    ArrayList<String> originalWords = new ArrayList<>(Arrays.asList("I", "me", "am", "you", "my", "your"));
-    ArrayList<String> mirrorWords = new ArrayList<>(Arrays.asList("you", "you", "are", "I", "your", "my"));
+   public String respond(String inputString) { 
+    // Mirror words mapping
+    ArrayList<String> originalWords = new ArrayList<>(Arrays.asList("I", "me", "am", "you", "my", "your", "are"));
+    ArrayList<String> mirrorWords = new ArrayList<>(Arrays.asList("you", "you", "are", "I", "your", "my", "am"));
 
     // Split input string into words
-    String[] words = inputString.split(" ");
-    boolean mirrored = false;
+    String[] inputwords = inputString.split(" ");
+    boolean mirrored = false; 
 
-    // Check and replace mirror words
-    for (int i = 0; i < words.length; i++) {
-        int index = originalWords.indexOf(words[i]); // Find index of word in originalWords
-        if (index != -1) {  // If found, replace it
-            words[i] = mirrorWords.get(index);
-            mirrored = true;
-        }
-    }
-    // Join words back into sentence
-    String response = String.join(" ", words);
-      
-    if (mirrored) {
-      return response;
-    } else {
-      return CannedResponses[(int) (Math.random() * CannedResponses.length)];
-    }
+    for (int i = 0; i < inputwords.length; i++) {
+      if (originalWords.contains(inputwords[i])) {  
+          int index = originalWords.indexOf(inputwords[i]); 
+          inputwords[i] = mirrorWords.get(index); 
+          mirrored = true;
+      }
   }
 
+    // Join words back into sentence
+    String response = String.join(" ", inputwords);
+
+    if (mirrored) {
+        return response; 
+    } else {
+        return canned_responses[(int) (Math.random() * canned_responses.length)]; // ✅ Otherwise, return canned response
+    }
+}
 
   public static void main(String[] arguments) {//main argument
 
